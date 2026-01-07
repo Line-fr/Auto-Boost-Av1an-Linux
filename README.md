@@ -60,12 +60,14 @@ cargo install --git https://github.com/rust-av/Av1an.git
 ### 5. SVT-AV1
 
 The automatic installer compiles **SVT-AV1-PSY** (Psycho-visual fork) with Clang and PGO/LTO optimizations for best quality and speed on Linux.
-Manual install (using defaults):
+Manual install (Recommended Build Command):
 ```bash
 git clone https://github.com/5fish/svt-av1-psy
-cd svt-av1-psy/Build/linux
-./build.sh --native --static --release --enable-lto --enable-pgo
-sudo cp ../../Bin/Release/SvtAv1EncApp /usr/local/bin/
+cd svt-av1-psy
+mkdir -p Build/linux && cd Build/linux
+cmake ../.. -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DSVT_AV1_PGO=ON -DSVT_AV1_LTO=ON
+make -j $(nproc)
+sudo make install
 ```
 Ensure `SvtAv1EncApp` is in your PATH.
 
@@ -76,18 +78,34 @@ The script relies on the following plugins:
 2.  **WWXD**: For scene detection (required by `Progressive-Scene-Detection.py`).
 3.  **VSZIP**: For metrics calculation (fallback if `fssimu2` is missing).
 
-Install FFMS2:
+**Install FFMS2:**
 ```bash
 sudo apt install -y libffms2-4 libffms2-dev
+# OR compile from source (recommended for latest ffmpeg support)
 ```
 
-**Install WWXD:**
-You typically need to compile this plugin or find it in a PPA.
-[GitHub: WWXD](https://github.com/dubhater/vapoursynth-wwxd)
+**Install WWXD (Critical Fix):**
+You MUST link against the math library.
+```bash
+git clone https://github.com/dubhater/vapoursynth-wwxd.git
+cd vapoursynth-wwxd
+gcc -o libwwxd.so -fPIC -shared -O3 -Wall -Wextra -I. -I/usr/local/include/vapoursynth src/*.c -lm
+sudo cp libwwxd.so /usr/local/lib/vapoursynth/
+```
 
-**Install VSZIP (SSIMULACRA2):**
-Required for metrics if you don't use `fssimu2`.
-[GitHub: vs-zip](https://github.com/dnjulek/vapoursynth-zip)
+**Install VSZIP (Metrics):**
+We recommend the `dnjulek` fork and Zig 0.13.0.
+```bash
+# Get Zig 0.13.0
+wget "https://ziglang.org/download/0.13.0/zig-linux-x86_64-0.13.0.tar.xz" -O zig.tar.xz
+mkdir -p zig_compiler && tar -xf zig.tar.xz -C zig_compiler --strip-components=1
+
+# Build Plugin
+git clone https://github.com/dnjulek/vapoursynth-zip.git vszip
+cd vszip
+../zig_compiler/zig build -Doptimize=ReleaseFast
+sudo cp zig-out/lib/libvszip.so /usr/local/lib/vapoursynth/
+```
 
 *Alternatively, you can install the `fssimu2` binary and place it in your PATH to avoid needing `vszip`.*
 
