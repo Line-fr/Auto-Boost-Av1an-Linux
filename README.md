@@ -6,6 +6,9 @@ This guide explains how to set up and run Auto-Boost-Av1an on Ubuntu.
 
 ### Automatic Installation
 
+For a detailed list of versions and software installed, see [DEPENDENCIES.md](DEPENDENCIES.md).
+
+
 We have provided a script to automatically install all dependencies on Ubuntu/Debian.
 This script needs to be run as root.
 
