@@ -111,25 +111,38 @@ sudo cp ../zig-out/lib/libvszip.so /usr/local/lib/vapoursynth/
 
 ## Usage
 
-1.  Place your source files (e.g., `yourfile-source.mkv`) in the project folder.
+1.  Place your source files (e.g., `yourfile-source.mkv`)
 2.  Make the script executable:
     ```bash
-    chmod +x run_linux.sh
+    chmod +x run_linux_crf30.sh
+    chmod +x run_linux_crf25.sh
+    chmod +x run_linux_crf15.sh
     ```
-3.  Run the script:
+### 3. Run the Script
+We provide variants based on quality targets. All scripts now support **Auto-BT.709 Detection** (via `dispatch.py` and `mediainfo`) and will automatically inject color parameters for HD content.
+
+*   **Standard Quality (CRF 30)**:
     ```bash
-    ./run_linux.sh
+    ./run_linux_crf30.sh
     ```
-    
-    **Alternative Run Scripts:**
-    *   `./run_linux_bt709.sh`: Same as standard but forces **BT.709** color signaling (Standard HD).
-    *   `./run_linux_hq.sh`: **High Quality** Mode. Slower presets (Tune 3), uses `vszip` based metrics, higher quality settings.
-    *   `./run_linux_hq_bt709.sh`: High Quality Mode + BT.709 color signaling.
+    Good balance of speed and quality. Equivalent to the old `batch.bat`.
+
+*   **High Quality (CRF 25)**:
+    ```bash
+    ./run_linux_crf25.sh
+    ```
+    Slower, higher fidelity (Tune 0, extra variance boost). Equivalent to `crf25-batch-high-quality.bat`.
+
+*   **Very High Quality (CRF 15 / Thicc)**:
+    ```bash
+    ./run_linux_crf15.sh
+    ```
+    Aggressive boosting, CRF 15 target. For maximum preservation.
 
 The script will:
-1.  Calculate optimal worker count.
-2.  Rename files to standard format.
-3.  Run Scene Detection.
+1.  Detect Scene Changes.
+2.  Start Av1an with the optimized parameters.
+3.  Automatically calculate worker count based on your hardware (on first run).
 4.  Run Auto-Boost-Av1an (Fast Pass -> Metrics -> Zones -> Final Encode).
 5.  Mux audio/subtitles back.
 6.  Tag the output file.
@@ -166,10 +179,11 @@ If you are moving this project to a Linux machine, you only need the following f
 
 **Root Directory:**
 -   `Auto-Boost-Av1an.py`
--   `run_linux.sh`
+-   `run_linux_crf30.sh` (and variants)
 -   `README_LINUX.md`
 
 **Tools Directory (`tools/`):**
+-   `tools/dispatch.py` (New)
 -   `tools/Progressive-Scene-Detection.py`
 -   `tools/cleanup.py`
 -   `tools/mux.py`
@@ -194,12 +208,13 @@ To support Linux, the following changes were made to the original codebase:
     -   **Windows**: Continues to use relative paths to the portable `tools\` folder (e.g., `tools\av1an\av1an.exe`).
     -   **Linux**: Uses `shutil.which()` to find `av1an` and `fssimu2` in the system PATH.
 
-### 2. `tools/mux.py` & `tools/tag.py`
+### 2. `tools/mux.py` & `tools/tag.py` & `tools/dispatch.py`
 -   **MKVToolNix Paths**: Modified to use `platform.system()` and `shutil.which()`.
     -   **Windows**: Uses bundled `tools\MKVToolNix\mkvmerge.exe` and `mkvpropedit.exe`.
     -   **Linux**: Expects `mkvmerge` and `mkvpropedit` to be installed and available in the system PATH.
 -   **Batch Detection (`tag.py`)**: Updated `get_active_batch_filename` to detect the new `sh-used-run.sh.txt` marker file created by the Linux shell script.
+-   **Dispatch (`dispatch.py`)**: Ported to utilize linux `mediainfo` for BT.709 detection and inject parameters to `Auto-Boost-Av1an.py`.
 
 ### 3. New Files
--   **`run_linux.sh`**: A Bash script created to verify worker count, rename files, run scene detection, execute the main Python script, and perform muxing/tagging/cleanup. This replaces `batch.bat` on Linux.
+-   **`run_linux_crf30.sh`** (and variants): Bash scripts created to verify worker count, rename files, run scene detection, execute the main Python script (via dispatch), and perform muxing/tagging/cleanup. Replaces `batch.bat` and others on Linux.
 -   **`README_LINUX.md`**: This documentation file.

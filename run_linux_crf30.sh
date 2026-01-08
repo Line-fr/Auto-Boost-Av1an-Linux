@@ -2,8 +2,7 @@
 set -e
 
 # --- STEP 0A: CREATE BATCH MARKER ---
-# Create a temporary file so tag.py knows which script is running
-touch "tools/sh-used-run_linux_bt709.sh.txt"
+touch "tools/sh-used-run_linux_crf30.sh.txt"
 
 # --- STEP 0B: SET TEMP PATH ---
 export PATH="$PWD/tools:$PATH"
@@ -12,10 +11,6 @@ export PATH="$PWD/tools:$PATH"
 if [ -f "tools/workercount-config.txt" ]; then
     WORKER_COUNT=$(grep "workers=" "tools/workercount-config.txt" | cut -d'=' -f2)
 else
-    echo ""
-    echo "-------------------------------------------------------------------------------"
-    echo "First Run Detected: Calculating optimal worker count..."
-    echo "-------------------------------------------------------------------------------"
     python3 "tools/workercount.py"
     if [ -f "tools/workercount-config.txt" ]; then
         WORKER_COUNT=$(grep "workers=" "tools/workercount-config.txt" | cut -d'=' -f2)
@@ -48,8 +43,8 @@ for f in *-source.mkv; do
     echo "Processing \"$f\"..."
     echo "-------------------------------------------------------------------------------"
     
-    # BT.709 Params
-    python3 "Auto-Boost-Av1an.py" -i "$f" --scenes "${filename_no_ext}_scenedetect.json" --photon-noise 2 --resume --workers "$WORKER_COUNT" --verbose --fast-params "--psy-rd 0.6 --color-primaries 1 --transfer-characteristics 1 --matrix-coefficients 1" --final-params "--psy-rd 0.6 --color-primaries 1 --transfer-characteristics 1 --matrix-coefficients 1 --lp 3"
+    # Standard (CRF 30) Params
+    python3 "tools/dispatch.py" -i "$f" --scenes "${filename_no_ext}_scenedetect.json" --photon-noise 2 --resume --workers "$WORKER_COUNT" --verbose --fast-params "--ac-bias 1.0 --enable-dlf 2" --final-params "--ac-bias 1.0 --enable-dlf 2 --lp 3"
 done
 
 # --- STEP 4: MUXING ---

@@ -2,6 +2,22 @@
 
 All notable changes to the Linux Port of Auto-Boost-Av1an will be documented in this file.
 
+## [1.1.0-linux] - 2026-01-08
+
+### Added
+- **Experimental SVT-AV1-PSY**: Updated `install_deps_ubuntu.sh` to checkout commit `e87a5ae3` (referencing `ac-bias` and `balancing-r0-based-layer-offset` features).
+- **Auto-BT.709 Detection**: Integrated `dispatch.py` (ported to Linux) which uses `mediainfo` to scan source files and automatically inject BT.709 color flags if detected.
+- **New Run Scripts**:
+    - `run_linux_crf30.sh`: Standard quality (replaces `run_linux.sh`).
+    - `run_linux_crf25.sh`: High quality (Tune 0, includes new variance/cdef bias settings).
+    - `run_linux_crf15.sh`: Very High quality ("Thicc" mode, CRF 15, Aggressive).
+- **Consolidated Dispatch**: All shell scripts now route through `tools/dispatch.py` for consistent handling of parameters and color detection.
+- **Tagging Improvements**: Updated `tools/tag.py` to dynamically parse settings and detect `SvtAv1EncApp` version from the system binary.
+
+### Changed
+- **Dependencies**: Added `mediainfo` to `install_deps_ubuntu.sh` (required for auto-detection).
+- **Removed**: Deleted obsolete `run_linux_hq.sh`, `run_linux_bt709.sh`, etc. in favor of the new CRF-based scripts.
+
 ## [1.0.0-linux] - 2026-01-07
 
 ### Added

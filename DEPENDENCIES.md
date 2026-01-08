@@ -32,5 +32,6 @@ This project relies on the following specific versions and forks of software. Th
 
 *   **Rust**: Stable (via rustup)
 *   **Zig**: **Latest Stable** (Handled automatically by VSZIP `build.sh`)
-*   **Clang**: Repository Version (for SVT-AV1 PGO build)
-*   **GCC/Make/CMake**: Standard build essentials.
+*   **mkvtoolnix-gui** (for mkvpropedit/mkvmerge)
+*   **mediainfo** (CLI version, for BT.709 auto-detection)
+*   **Git, CMake, Clang, NASM/YASM** (Build essentials)
