@@ -2,6 +2,37 @@
 
 All notable changes to the Linux Port of Auto-Boost-Av1an will be documented in this file.
 
+## [1.6.0-linux] - 2026-01-14
+
+### Added
+- **Wakepy Integration**: Implemented `wakepy` support in `Auto-Boost-Av1an.py` to prevent system sleep during long encoding sessions (matches v1.44 feature).
+- **Light Denoise Tool**: Added `extras/light-denoise.sh` (wraps `tools/light-denoise-x265-lossless.py`).
+    - Uses `vsdenoise` (DFTTest) and `x265` lossless encoding.
+    - Fully pipeline-based (VapourSynth Pipe -> x265) for Linux compatibility.
+- **Improved Audio Workflow**:
+    - Updated `tools/opus.py` to support "Lossless Only" (default) vs "All Tracks" encoding modes.
+    - Added `LOSSLESS_EXTS` configuration matching upstream v1.43/v1.44.
+- **New Tools Ported**:
+    - `tools/detect_grainy_flashbacks-beta.py`: Ported with dynamic parallelism and Linux-safe multiprocessing.
+    - `tools/ac3.py` & `tools/eac3.py`: Direct audio encoders ported to use system FFmpeg/MKVToolNix.
+    - `tools/forced-aspect-remux.py`: Aspect ratio correction utility.
+    - `tools/light-denoise-nvencc.py`: NVEncC denoise wrapper (requires `nvencc` in PATH).
+    - `tools/compress-folders.py`: Adapted as a disk usage analyzer (compression is NTFS-only).
+- **Audio Batch Scripts**:
+    - Added default settings files for AC3/EAC3/Opus encoding in `audio-encoding/`.
+    - Added `encode-ac3-audio.sh`, `encode-eac3-audio.sh`, `encode-opus-audio.sh` wrappers.
+- **Extras Shell Wrappers**:
+    - `disk-usage.sh`: Disk usage checker (replaces Windows-only compress-folders).
+    - `forced-aspect-remux.sh`: Aspect ratio correction wrapper.
+    - `light-denoise-nvidia.sh`: NVEncC GPU denoise wrapper.
+
+### Changed
+- **Robust Crop Detection**: Updated `tools/cropdetect.py` to the latest robust version (multi-segment analysis, higher accuracy).
+- **Dependencies**: Added `wakepy` and `vsdenoise` to `install_deps_ubuntu.sh`.
+
+### Fixed
+- **Line Endings**: Converted all `.sh` scripts (`install_deps_ubuntu.sh`, run scripts, extras) to strict Unix (LF) line endings to prevent `$'\r': command not found` errors.
+
 ## [1.5.0-linux] - 2026-01-11
 
 ### Added

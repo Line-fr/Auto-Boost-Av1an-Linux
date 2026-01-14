@@ -7,14 +7,15 @@ This project relies on the following specific versions and forks of software. Th
 | Software | Version/Branch | Source / Notes |
 | :--- | :--- | :--- |
 | **Av1an** | Latest Git (Master) | [rust-av/Av1an](https://github.com/rust-av/Av1an) |
-| **SVT-AV1-PSY** | Latest Git (Master) | [5fish/svt-av1-psy](https://github.com/5fish/svt-av1-psy) <br> *Built with Clang, PGO, LTO* |
+| **SVT-AV1-PSY** | Commit `2f788d04` (main) | [5fish/svt-av1-psy](https://github.com/5fish/svt-av1-psy) <br> *Built with Clang, PGO, LTO. ac-bias merged to main.* |
 | **VapourSynth** | Latest Git (Master) | [vapoursynth/vapoursynth](https://github.com/vapoursynth/vapoursynth) |
 | **FFmpeg** | Repository Version | Standard Ubuntu/Debian Repos (`apt install ffmpeg`) |
 | **MKVToolNix** | Repository Version | Standard Ubuntu/Debian Repos (`mkvmerge`, `mkvpropedit`) |
 | **x265** | Repository Version | CLI Tool (`apt install x265`) for Lossless Intermediary |
 | **Opus Tools** | Repository Version | `opusenc` (`apt install opus-tools`) |
 | **xclip** | Repository Version | Clipboard support for `comp.py` (`apt install xclip`) |
-| **fssimu2** | Latest Git (Main) | [gianni-rosato/fssimu2](https://github.com/gianni-rosato/fssimu2) <br> *Metrics Tool (Rust)* |
+| **fssimu2** | Latest Git (Main) | [gianni-rosato/fssimu2](https://github.com/gianni-rosato/fssimu2) <br> *Metrics Tool (Zig Build)* |
+| **NVEncC** | Manual Install | [rigaya/NVEnc](https://github.com/rigaya/NVEnc) <br> *Optional: NVIDIA GPU denoise tool* |
 
 ## VapourSynth Plugins
 
@@ -38,6 +39,8 @@ This project relies on the following specific versions and forks of software. Th
 *   `requests_toolbelt`
 *   `natsort`
 *   `colorama`
+*   `wakepy` (prevent system sleep during encoding)
+*   `vsdenoise` (included in vsjetpack - DFTTest wrapper)
 
 ## Build Tools
 

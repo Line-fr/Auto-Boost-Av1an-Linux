@@ -16,6 +16,8 @@ import psutil
 TOTAL_THREADS = psutil.cpu_count(logical=True)
 PARALLELISM = max(1, (TOTAL_THREADS if TOTAL_THREADS else 2) - 1)
 
+LOSSLESS_EXTS = {".flac", ".wav", ".thd", ".dtshd", ".pcm"}
+
 IGNORE_EXTS = set()
 # =================================================
 
@@ -74,6 +76,7 @@ def get_binary(name):
 
 
 FFMPEG_EXE = get_binary("ffmpeg")
+FFPROBE_EXE = get_binary("ffprobe")
 OPUSENC_EXE = get_binary("opusenc")
 MKVMERGE_EXE = get_binary("mkvmerge")
 MKVEXTRACT_EXE = get_binary("mkvextract")
@@ -125,10 +128,29 @@ def get_track_title_string(lang_code):
         "hin": "Hindi",
         "und": "",
     }
+    # --- PHASE 1: EXTRACTION ---
+
     return lookup.get(lang_code.lower(), "")
 
 
-# --- PHASE 1: EXTRACTION ---
+def get_user_choice():
+    print("\n" + "=" * 50)
+    print("      OPUS AUDIO ENCODER - SELECTION MENU")
+    print("=" * 50)
+    print("1. Encode ONLY Lossless audio to Opus (Recommended)")
+    print("   (Processing: FLAC, PCM/WAV, TrueHD, DTS-HD)")
+    print("   (Preserves: AC3, AAC, DTS Core, Vorbis as-is)")
+    print("\n2. Encode ALL audio tracks to Opus")
+    print("   (Warning: Causes generational loss on AC3/AAC/DTS)")
+    print("=" * 50)
+
+    while True:
+        choice = input("\nEnter your choice (1 or 2): ").strip()
+        if choice == "1":
+            return 1
+        elif choice == "2":
+            return 2
+        print("Invalid input. Please enter 1 or 2.")
 
 
 def get_mkv_tracks(mkv_path):
@@ -141,7 +163,7 @@ def get_mkv_tracks(mkv_path):
         return []
 
 
-def extract_tracks():
+def extract_tracks(mode):
     # Loop over BOTH Input directory AND current directory for flexibility
     mkvs = []
     if INPUT_DIR.exists():
@@ -204,6 +226,12 @@ def extract_tracks():
             if ext in IGNORE_EXTS:
                 continue
 
+            # Filter based on mode
+            if mode == 1:
+                # Lossless only mode: Skip if NOT in LOSSLESS_EXTS
+                if ext not in LOSSLESS_EXTS:
+                    continue
+
             out_name = vid_temp / f"{mkv.stem}_track{tid}_{lang}{ext}"
 
             if not out_name.exists():
@@ -243,7 +271,7 @@ def display_loop():
 
 def get_audio_channels(filepath):
     cmd = [
-        FFMPEG_EXE,
+        FFPROBE_EXE,
         "-v",
         "error",
         "-select_streams",
@@ -526,7 +554,8 @@ def mux_final_files():
 
 def main():
     try:
-        extracted = extract_tracks()
+        mode = get_user_choice()
+        extracted = extract_tracks(mode)
 
         to_flac = [f for f in extracted if f.suffix != ".flac" and f.suffix != ".opus"]
         to_opus = [f for f in extracted if f.suffix == ".flac"]

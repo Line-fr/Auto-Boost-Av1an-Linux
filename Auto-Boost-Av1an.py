@@ -46,6 +46,7 @@ import sys
 import gc
 import os
 import re
+import wakepy
 import json
 import csv
 import numpy as np
@@ -1509,17 +1510,49 @@ def calculate_zones_json(ranges: list[float], hr: bool, nframe: int) -> None:
 
 console.print("[bold]Auto-Boost-Av1an start!\n")
 
-if no_boosting:
-    stage = 4
+with wakepy.keep.running():
+    if no_boosting:
+        stage = 4
 
-match stage:
-    case 0:
-        if stage_resume < 2:
+    match stage:
+        case 0:
+            if stage_resume < 2:
+                fast_pass()
+                with open(stage_file, "w") as file:
+                    file.write("2")
+                print("Stage 1 complete! Now calculating metric scores")
+            if stage_resume < 3:
+                try:
+                    calculate_metric()
+                except KeyboardInterrupt:
+                    raise SystemExit(1)
+                with open(stage_file, "w") as file:
+                    file.write("3")
+                print("Stage 2 complete!")
+            if stage_resume < 4:
+                try:
+                    ranges, hr, nframe, _, _, _, _ = get_file_info(src_file, "src")
+                    calculate_zones_json(ranges, hr, nframe)
+                except KeyboardInterrupt:
+                    raise SystemExit(1)
+                with open(stage_file, "w") as file:
+                    file.write("4")
+                print("Stage 3 complete!")
+            if stage_resume < 5:
+                final_pass()
+                try:
+                    shutil.move(tmp_final_output_file, final_output_file)
+                except:
+                    pass  # Can crash if same file
+                with open(stage_file, "w") as file:
+                    file.write("5")
+                print("Stage 4 complete!")
+        case 1:
             fast_pass()
             with open(stage_file, "w") as file:
                 file.write("2")
             print("Stage 1 complete! Now calculating metric scores")
-        if stage_resume < 3:
+        case 2:
             try:
                 calculate_metric()
             except KeyboardInterrupt:
@@ -1527,7 +1560,7 @@ match stage:
             with open(stage_file, "w") as file:
                 file.write("3")
             print("Stage 2 complete!")
-        if stage_resume < 4:
+        case 3:
             try:
                 ranges, hr, nframe, _, _, _, _ = get_file_info(src_file, "src")
                 calculate_zones_json(ranges, hr, nframe)
@@ -1536,48 +1569,17 @@ match stage:
             with open(stage_file, "w") as file:
                 file.write("4")
             print("Stage 3 complete!")
-        if stage_resume < 5:
+        case 4:
             final_pass()
             try:
                 shutil.move(tmp_final_output_file, final_output_file)
             except:
-                pass  # Can crash if same file
+                pass
             with open(stage_file, "w") as file:
                 file.write("5")
             print("Stage 4 complete!")
-    case 1:
-        fast_pass()
-        with open(stage_file, "w") as file:
-            file.write("2")
-        print("Stage 1 complete! Now calculating metric scores")
-    case 2:
-        try:
-            calculate_metric()
-        except KeyboardInterrupt:
+        case _:
+            console.print("[red]Stage argument invalid, exiting.")
             raise SystemExit(1)
-        with open(stage_file, "w") as file:
-            file.write("3")
-        print("Stage 2 complete!")
-    case 3:
-        try:
-            ranges, hr, nframe, _, _, _, _ = get_file_info(src_file, "src")
-            calculate_zones_json(ranges, hr, nframe)
-        except KeyboardInterrupt:
-            raise SystemExit(1)
-        with open(stage_file, "w") as file:
-            file.write("4")
-        print("Stage 3 complete!")
-    case 4:
-        final_pass()
-        try:
-            shutil.move(tmp_final_output_file, final_output_file)
-        except:
-            pass
-        with open(stage_file, "w") as file:
-            file.write("5")
-        print("Stage 4 complete!")
-    case _:
-        console.print("[red]Stage argument invalid, exiting.")
-        raise SystemExit(1)
 
 console.print("\n[bold]Auto-boost complete!")

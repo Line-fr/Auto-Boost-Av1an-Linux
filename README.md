@@ -180,18 +180,43 @@ The script will:
 7.  Cleanup temporary files.
 8.  Final outputs are in the `Output/` folder.
 
+## Audio Encoding (Standalone)
+
+We include an `audio-encoding/` folder for batch audio conversion workflows:
+
+| Script | Description |
+|--------|-------------|
+| `encode-ac3-audio.sh` | Converts audio tracks to **AC3** (Dolby Digital) - for legacy devices |
+| `encode-eac3-audio.sh` | Converts audio tracks to **EAC3** (Dolby Digital Plus) - recommended |
+| `encode-opus-audio.sh` | Converts audio tracks to **Opus** - best quality/size ratio |
+
+*Usage:*
+```bash
+cd audio-encoding
+# Place your .mkv files in this folder
+./encode-eac3-audio.sh
+```
+
+Settings files (`settings-encode-*.txt`) control bitrates per channel configuration.
+
 ## Extras (Linux)
 
-We include a `extras/` folder with helper scripts for advanced workflows:
+We include an `extras/` folder with helper scripts for advanced workflows:
 
-*   **`encode-opus-audio.sh`**: Scans `Input/` for MKVs, extracts audio, converts to efficient **Opus** format, and remuxes output to `Output/`.
-*   **`lossless-intermediary.sh`**: Converts video files to lossless 10-bit x265 intermediates (useful for heavier editing/filtering).
-*   **`compare.sh`**: Runs `comp.py` to generate comparison screenshots between video files.
+| Script | Description |
+|--------|-------------|
+| `encode-opus-audio.sh` | Legacy audio encoding (use `audio-encoding/` instead) |
+| `lossless-intermediary.sh` | Converts video to lossless 10-bit x265 intermediates |
+| `compare.sh` | Generates comparison screenshots via `comp.py` |
+| `light-denoise.sh` | Applies DFTTest denoise + x265 lossless encoding |
+| `light-denoise-nvidia.sh` | GPU-accelerated NVEncC denoise (NVIDIA required) |
+| `forced-aspect-remux.sh` | Copies aspect ratio from source to encoded output |
+| `disk-usage.sh` | Reports disk usage (Linux replacement for NTFS compress) |
 
 *Usage:*
 ```bash
 cd extras
-./encode-opus-audio.sh
+./light-denoise.sh
 ```
 
 ## Troubleshooting
@@ -211,7 +236,15 @@ If you are moving this project to a Linux machine, you only need the following f
 
 **Tools Directory (`tools/`):**
 -   `tools/dispatch.py` (New)
--   `tools/cropdetect.py` (New - auto-crop support)
+-   `tools/cropdetect.py` (auto-crop support)
+-   `tools/ac3.py` (AC3 audio encoder)
+-   `tools/eac3.py` (EAC3 audio encoder)
+-   `tools/opus.py` (Opus audio encoder)
+-   `tools/forced-aspect-remux.py` (aspect ratio fixer)
+-   `tools/light-denoise-nvencc.py` (NVIDIA GPU denoise)
+-   `tools/light-denoise-x265-lossless.py` (CPU denoise)
+-   `tools/detect_grainy_flashbacks-beta.py` (flashback detection)
+-   `tools/comp.py` (video comparison tool)
 -   `tools/Progressive-Scene-Detection.py`
 -   `tools/cleanup.py`
 -   `tools/mux.py`

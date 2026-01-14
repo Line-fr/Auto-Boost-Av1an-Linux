@@ -46,7 +46,7 @@ apt install -y software-properties-common ffmpeg x264 mkvtoolnix mkvtoolnix-gui 
 echo "Installing Python Libraries..."
 # Use --ignore-installed to avoid conflicts with apt-installed packages
 # Added dependencies for tools/comp.py (anitopy, pyperclip, requests, natsort, colorama)
-pip3 install vsjetpack numpy rich vstools psutil anitopy pyperclip requests requests_toolbelt natsort colorama --break-system-packages --ignore-installed
+pip3 install vsjetpack numpy rich vstools psutil anitopy pyperclip requests requests_toolbelt natsort colorama wakepy --break-system-packages --ignore-installed
 
 # Remove the pip-installed vapoursynth which conflicts with the source build we are about to do
 echo "Removing pip-installed VapourSynth to avoid version mismatch..."
@@ -237,9 +237,9 @@ if ! command -v SvtAv1EncApp &> /dev/null; then
     fi
 
     if [ -d "svt-av1-psy" ]; then rm -rf svt-av1-psy; fi
-    git clone -b ac-bias+exp https://github.com/5fish/svt-av1-psy.git
+    git clone https://github.com/5fish/svt-av1-psy.git
     cd svt-av1-psy
-    git checkout e87a5ae3 || echo "Warning: Commit e87a5ae3 not found. Using latest tip of ac-bias+exp."
+    git checkout 2f788d04 || echo "Warning: Commit 2f788d04 not found. Using latest main."
     
     mkdir -p Build/linux
     cd Build/linux
