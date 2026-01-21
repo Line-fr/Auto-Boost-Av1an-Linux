@@ -2,6 +2,41 @@
 
 All notable changes to the Linux Port of Auto-Boost-Av1an will be documented in this file.
 
+## [1.8.0-linux] - 2026-01-21
+
+### Added
+- **Extras Scripts** (v1.48):
+    - `extras/create-sample.sh`: Creates a 90-second sample from MKV files for testing encode settings.
+    - `extras/simple-remux.sh`: Remuxes MKV/MP4/M2TS files into clean MKV containers.
+    - `extras/vspreview.sh`: Opens vspreview for viewing MKV files locally; useful for comparing files and finding frame numbers for zones.
+    - `extras/add-subtitles.sh`: Muxes subtitles (.ass/.srt) and fonts (.ttf/.otf) into MKV files with language auto-detection.
+- **Supporting Python Tools**:
+    - `tools/add-subtitles.py`: Subtitle muxer with language detection from filename.
+    - `tools/vspreview-dispatch.py`: VSPreview script generator for multi-file comparison.
+- **Combined Prefilter Scripts** (v1.49):
+    - `prefilter/nvidia-prefilter.sh`: Combined NVIDIA GPU prefilter with denoise/deband/downscale support.
+    - `prefilter/x265-prefilter.sh`: Combined CPU prefilter with denoise/deband/downscale support.
+    - `tools/nvidia-prefilter.py` and `tools/x265-prefilter.py`: Core Python scripts for combined prefiltering.
+- **Automated Downscaling** (v1.48): Root-level `settings.txt` added with downscaling options for encoding workflow.
+- **CRF 18 Scripts** (v1.5):
+    - `run_linux_anime_crf18.sh`: Anime higher quality script (replaces CRF 15 for "sweet spot" encodes).
+    - `run_linux_live_crf18.sh`: Live action higher quality script (replaces CRF 15).
+- **--convert-to-YUV420P10** (v1.5): Added support in dispatch.py for non-standard chroma subsampling sources (4:2:2, 4:4:4, etc.).
+
+### Changed
+- **Fast-Pass Scene Detection** (v1.49): All run scripts now check for existing Progressive-Scene-Detection JSON files and skip detection if found, significantly speeding up resumed encodes.
+- **Prefilter Settings**: Updated `prefilter/settings.txt` to match Windows v1.48/v1.49 format with combined [NVIDIA] and [x265] sections supporting downscale/denoise/deband options.
+- **Updated Documentation**: Refreshed `extras/README.md` and `prefilter/README.md` to document all new scripts and usage.
+
+### Fixed
+- **mux.py**: Updated to match Windows version with VFR (Variable Frame Rate) support, timestamp extraction, and mkvpropedit metadata fixes.
+- **cropdetect.py**: Updated to match Windows version with `load_settings()` for manual crop support from settings.txt and better progress reporting.
+- **Auto-Boost-Av1an.py**: Updated VPY template with downscaling support and `--convert-to-YUV420P10` option, added `--zones` argument, and integrated settings.txt parser for downscaling configuration.
+
+### Notes
+- This release matches Windows v1.48, v1.49, and v1.5 features.
+- CRF 15 scripts are retained for compatibility; new CRF 18 scripts provide the recommended "sweet spot" quality.
+
 ## [1.7.0-linux] - 2026-01-17
 
 ### Added
