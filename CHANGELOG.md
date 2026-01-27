@@ -2,6 +2,33 @@
 
 All notable changes to the Linux Port of Auto-Boost-Av1an will be documented in this file.
 
+## [1.9.0-linux] - 2026-01-27
+
+### Added
+- **Progression Boost Scripts** (v1.51/v1.52):
+    - `Progression-Boost-SSIMU2-anime.sh`: Automated per-scene quality optimization for Anime.
+    - `Progression-Boost-SSIMU2-liveaction.sh`: Automated per-scene quality optimization for Live Action.
+    - **Features**:
+        - Automatic "sweet spot" quality targeting using SSIMULACRA2 metrics.
+        - Splits video into scenes, calculates complex metrics, and encodes each scene with optimal settings.
+        - Includes automatic benchmarking (`tools/progression-workercount.py`) to determine optimal worker count based on RAM/CPU.
+- **Audio Improvements** (v1.51):
+    - **2.1 Channel Support**: Added detection and specific bitrate targets for 2.1 audio in `opus.py` (192k) and `ac3.py`/`eac3.py` (320k).
+    - **Settings File Loading**: Audio tools now read bitrates from `audio-encoding/settings-encode-*-audio.txt`.
+- **FFVship Support**: Updated `install_deps_ubuntu.sh` to compile `FFVship` (GPU) from source, enabling `vs-hip` mode parity.
+
+### Changed
+- **Crop Detection**: Updated `cropdetect.py` to match Windows v1.51 logic (StaxRip-based autocrop with aggressive mode).
+- **Dispatch Logic**: Updated `progression-dispatch-Basic-SSIMU2.py` to dynamically switch between `FFVship` (GPU) and `fssimu2` (CPU) binaries based on benchmark results.
+
+### Fixed
+- **Audio Parity**: Updated `eac3.py` to support 2.1 channel detection and bitrate assignment, matching `ac3.py` behavior.
+- **Tools Parity**: General parity improvements across Linux tools including fixes for `fssimu2` logic in dispatch.
+
+### Notes
+- Progression Boost defaults to `ssimu2_quality="82"` for high quality.
+- Requires `wakepy` python package (added in previous updates).
+
 ## [1.8.0-linux] - 2026-01-21
 
 ### Added

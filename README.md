@@ -27,6 +27,13 @@ Pick based on your content type and desired quality:
 |--------|---------|-------------|
 | `run_linux_sports_crf33.sh` | Optimized | ✅ Best for high-motion content |
 
+### 🚀 PROGRESSION BOOST (PER-SCENE OPTIMIZATION)
+| Script | Quality | Description |
+|--------|---------|-------------|
+| `Progression-Boost-SSIMU2-anime.sh` | **Auto** | Analyzes each scene and optimizes settings for Anime |
+| `Progression-Boost-SSIMU2-liveaction.sh` | **Auto** | Analyzes each scene and optimizes settings for Live Action |
+> **Note:** Progression Boost uses SSIMULACRA2 metrics to target a visual quality score (Default: 82). It benchmarking your CPU/RAM on first run to set optimal workers.
+
 > **TIP:** Start with CRF 30. If quality isn't sufficient, try CRF 25. For archival purposes, use CRF 15.
 
 ### What is CRF?
@@ -94,12 +101,18 @@ Manual install:
 cargo install --git https://github.com/rust-av/Av1an.git
 ```
 
-### 5. fssimu2 (Metrics)
+### 5. fssimu2 (CPU Metrics)
 The automated installer compiles this native Rust tool for identical Windows parity.
 Manual install:
 ```bash
 cargo install --git https://github.com/gianni-rosato/fssimu2.git
 ```
+
+### 5b. vship / FFVship (GPU Metrics)
+The automated installer compiles this from source for GPU-accelerated metrics.
+Requires NVIDIA (CUDA) or AMD (HIP) drivers.
+Manual install: *See [Line-fr/Vship](https://github.com/Line-fr/Vship)*
+
 
 ### 5. SVT-AV1
 
@@ -173,6 +186,7 @@ SvtAv1EncApp --help | grep "SVT"
 # Check Metrics Tools
 zig version
 fssimu2 --version || echo "fssimu2 not installed (optional - will use vs-zip fallback)"
+FFVship --help | head -n 1 || echo "FFVship (GPU) not installed"
 
 # Check VapourSynth Plugins
 python3 -c "from vapoursynth import core; print('WWXD:', hasattr(core, 'wwxd')); print('VSZIP:', hasattr(core, 'vszip'))"
@@ -224,7 +238,11 @@ We include an `audio-encoding/` folder for batch audio conversion workflows:
 |--------|-------------|
 | `encode-ac3-audio.sh` | Converts audio tracks to **AC3** (Dolby Digital) - for legacy devices |
 | `encode-eac3-audio.sh` | Converts audio tracks to **EAC3** (Dolby Digital Plus) - recommended |
+| `encode-eac3-audio.sh` | Converts audio tracks to **EAC3** (Dolby Digital Plus) - recommended |
 | `encode-opus-audio.sh` | Converts audio tracks to **Opus** - best quality/size ratio |
+
+> **2.1 Channel Support:** `encode-opus-audio.sh` (192k) and `encode-ac3-audio.sh` (320k) now support 2.1 channel detection and optimization.
+
 
 *Usage:*
 ```bash

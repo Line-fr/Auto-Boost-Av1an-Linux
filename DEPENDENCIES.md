@@ -15,6 +15,7 @@ This project relies on the following specific versions and forks of software. Th
 | **Opus Tools** | Repository Version | `opusenc` (`apt install opus-tools`) |
 | **xclip** | Repository Version | Clipboard support for `comp.py` (`apt install xclip`) |
 | **fssimu2** | Latest Git (Main) | [gianni-rosato/fssimu2](https://github.com/gianni-rosato/fssimu2) <br> *Metrics Tool (Zig Build)* |
+| **vship / FFVship** | Latest Git (Main) | [Line-fr/Vship](https://github.com/Line-fr/Vship) <br> *GPU Metrics Tool (CUDA/HIP)* |
 | **NVEncC** | Manual Install | [rigaya/NVEnc](https://github.com/rigaya/NVEnc) <br> *Optional: NVIDIA GPU denoise tool* |
 
 ## VapourSynth Plugins

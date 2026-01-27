@@ -33,7 +33,7 @@ This folder contains helper scripts for additional workflows.
 |--------|-------------|
 | `encode-opus-audio.sh` | Batch audio re-encoding to Opus format |
 
-> **Note:** For standalone audio encoding, see the `audio-encoding/` folder in the root directory which includes AC3, EAC3, and Opus encoders with configurable bitrates.
+> **Note:** For standalone audio encoding, see the `audio-encoding/` folder in the root directory which includes AC3, EAC3, and Opus encoders with configurable bitrates and **new 2.1 channel support**.
 
 ## Testing & Extras
 
