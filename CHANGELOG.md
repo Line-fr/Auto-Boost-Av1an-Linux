@@ -24,6 +24,7 @@ All notable changes to the Linux Port of Auto-Boost-Av1an will be documented in 
 ### Fixed
 - **Audio Parity**: Updated `eac3.py` to support 2.1 channel detection and bitrate assignment, matching `ac3.py` behavior.
 - **Tools Parity**: General parity improvements across Linux tools including fixes for `fssimu2` logic in dispatch.
+- **Tagging**: Updated `progression-tag.py` regex to correctly detect and tag `ssimu2_quality` settings.
 
 ### Notes
 - Progression Boost defaults to `ssimu2_quality="82"` for high quality.
